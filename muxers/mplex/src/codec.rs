@@ -56,6 +56,15 @@ pub(crate) struct LocalStreamId {
     role: Endpoint,
 }
 
+impl fmt::Display for LocalStreamId {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        match self.role {
+            Endpoint::Dialer => write!(f, "({}/initiator)", self.num),
+            Endpoint::Listener => write!(f, "({}/receiver)", self.num),
+        }
+    }
+}
+
 /// Manual implementation of [`PartialEq`].
 ///
 /// This is equivalent to the derived one but we purposely don't derive it because it triggers the
