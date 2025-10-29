@@ -85,4 +85,29 @@ impl crate::handler::ConnectionHandler for ConnectionHandler {
     ) -> Poll<ConnectionHandlerEvent<Self::OutboundProtocol, (), Self::ToBehaviour>> {
         Poll::Pending
     }
+
+    fn on_connection_event(
+        &mut self,
+        event: ConnectionEvent<Self::InboundProtocol, Self::OutboundProtocol>,
+    ) {
+        match event {
+            ConnectionEvent::FullyNegotiatedInbound(FullyNegotiatedInbound {
+                protocol, ..
+            }) => libp2p_core::util::unreachable(protocol),
+            ConnectionEvent::FullyNegotiatedOutbound(FullyNegotiatedOutbound {
+                protocol, ..
+            }) => libp2p_core::util::unreachable(protocol),
+            ConnectionEvent::DialUpgradeError(DialUpgradeError { info: _, error }) => match error {
+                StreamUpgradeError::Timeout => unreachable!(),
+                StreamUpgradeError::Apply(e) => libp2p_core::util::unreachable(e),
+                StreamUpgradeError::NegotiationFailed | StreamUpgradeError::Io(_) => {
+                    unreachable!("Denied upgrade does not support any protocols")
+                }
+            },
+            ConnectionEvent::AddressChange(_)
+            | ConnectionEvent::ListenUpgradeError(_)
+            | ConnectionEvent::LocalProtocolsChange(_)
+            | ConnectionEvent::RemoteProtocolsChange(_) => {}
+        }
+    }
 }
