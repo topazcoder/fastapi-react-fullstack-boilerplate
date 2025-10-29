@@ -103,6 +103,3 @@ impl Body {
     }
 }
 
-fn js_error(msg: &str) -> JsError {
-    io::Error::other(msg).into()
-}
