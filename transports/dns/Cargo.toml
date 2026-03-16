@@ -15,7 +15,7 @@ async-trait = "0.1.89"
 futures = { workspace = true }
 libp2p-core = { workspace = true }
 libp2p-identity = { workspace = true }
-parking_lot = "0.12.3"
+parking_lot = "0.12.5"
 hickory-resolver = { workspace = true, features = ["system-config"] }
 smallvec = "1.13.2"
 tracing = { workspace = true }
